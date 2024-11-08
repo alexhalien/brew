@@ -16,6 +16,7 @@ module Homebrew
         @tap_style_exceptions      = tap.style_exceptions
         @tap_pypi_formula_mappings = tap.pypi_formula_mappings
         @tap_autobump              = tap.autobump
+        @tap_migrations            = tap.tap_migrations
         @problems                  = []
 
         @cask_tokens = tap.cask_tokens.map do |cask_token|
@@ -54,6 +55,9 @@ module Homebrew
       check_formula_list_directory "style_exceptions", @tap_style_exceptions
       check_formula_list "pypi_formula_mappings", @tap_pypi_formula_mappings
       check_formula_list ".github/autobump.txt", @tap_autobump
+
+      renames = @formula_renames.values.reject { |name| @formula_renames.key?(name) || @tap_migrations.key?(name) }
+      check_formula_list "formula_renames", renames
     end
 
     sig { void }
